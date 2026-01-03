@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.flask.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.flask.name }}
+spec:
+  # replicas: {{ .Values.flask.replicas }} # Horizontal pod autoscaler active
+  selector:
+    matchLabels:
+      app: {{ .Values.flask.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.flask.name }}
+
+    spec:
+      serviceAccountName: {{ .Values.secrets.serviceAccountName }}
+      containers:
+      - name: {{ .Values.flask.name }}
+        image: {{ .Values.flask.image.repository }}:{{ .Values.flask.image.tag }}
+        ports:
+        - containerPort: {{ .Values.flask.containerPort }}
+
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.flask.probes.liveness.path }}
+            port: {{ .Values.flask.containerPort }}
+            scheme: HTTP
+          initialDelaySeconds: 30  # Give app time to start
+          periodSeconds: 10        # Check every 10 seconds
+          timeoutSeconds: 5        # Max 5 seconds per check
+          successThreshold: 1      # 1 success = healthy
+          failureThreshold: 3      # 3 failures = restart
+
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.flask.probes.readiness.path }}
+            port: {{ .Values.flask.containerPort }}
+            scheme: HTTP
+          initialDelaySeconds: 5   # Start checking sooner
+          periodSeconds: 5         # Check every 5 seconds
+          timeoutSeconds: 3        # Faster timeout
+          successThreshold: 1
+          failureThreshold: 3
+
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
+          seccompProfile:
+            type: RuntimeDefault
+
+        resources:
+          requests:
+            memory: {{ .Values.flask.resources.requests.memory }}
+            cpu: {{ .Values.flask.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.flask.resources.limits.memory }}
+            cpu: {{ .Values.flask.resources.limits.cpu }}
+
+        envFrom:
+          - secretRef:
+              name: flask-app-secret
+          - secretRef:
+              name: flask-app-static-secret
+
+        volumeMounts:
+          - name: tmp
+            mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
