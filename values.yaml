@@ -4,19 +4,19 @@ global:
   namespace: flask-mysql-redis-app
   host: sreevasmk.in
   certificate_arn: arn:aws:acm:ap-south-1:337909748081:certificate/e2f7cebe-713c-49cc-9cf4-79683a52256e
-  vpc_cidr: 192.168.0.0/16
+  vpc_cidr: 10.0.0.0/16
 
 # Flask App Configuration
 flask:
   # Basic settings
   name: flask-mysql-redis-app
   replicas: 3
-  
+
   # Image settings
   image:
     repository: sreevasmk1993/employees-data-app
     tag: latest
-  
+
   # Port
   containerPort: 3000
 
@@ -35,7 +35,7 @@ flask:
     limits:
       memory: "256Mi"
       cpu: "100m"
-  
+
   # Autoscaling
   autoscaling:
     minReplicas: 3
@@ -44,10 +44,10 @@ flask:
     memoryTarget: 70
 
   secrets:
-    DB_HOST: flask-mysql-redis-app.cf68siug04ay.ap-south-1.rds.amazonaws.com
-    REDIS_HOST: master.flask-mysql-redis-app.ni6vqg.aps1.cache.amazonaws.com
+    DB_HOST: eks-infra-mysql.cf68siug04ay.ap-south-1.rds.amazonaws.com
+    REDIS_HOST: clustercfg.eks-infra-valkey.ni6vqg.aps1.cache.amazonaws.com
     remoteRef:
-      key: rds!db-b5e9330c-7c8f-4518-aa0d-0a4254db0652
+      key: rds!db-7d0bed7b-85a2-482d-83d3-ce45888fdc83
 
 aws:
   region: ap-south-1
