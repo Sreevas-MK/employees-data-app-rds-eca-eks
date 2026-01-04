@@ -1,8 +1,7 @@
-# values.yaml
 # Global configurations
 global:
   namespace: flask-mysql-redis-app
-  host: sreevasmk.in
+  host: app.sreevasmk.in
   certificate_arn: arn:aws:acm:ap-south-1:337909748081:certificate/e2f7cebe-713c-49cc-9cf4-79683a52256e
   vpc_cidr: 10.0.0.0/16
 
