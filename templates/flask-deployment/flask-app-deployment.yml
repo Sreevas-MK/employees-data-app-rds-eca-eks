@@ -63,7 +63,6 @@ spec:
             memory: {{ .Values.flask.resources.limits.memory }}
             cpu: {{ .Values.flask.resources.limits.cpu }}
 
-
         env:
           - name: REDIS_HOST
             value: {{ .Values.flask.secrets.REDIS_HOST | quote }}
