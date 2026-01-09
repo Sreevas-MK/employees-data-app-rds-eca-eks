@@ -63,11 +63,20 @@ spec:
             memory: {{ .Values.flask.resources.limits.memory }}
             cpu: {{ .Values.flask.resources.limits.cpu }}
 
+
+         env:
+          - name: REDIS_HOST
+            value: {{ .Values.flask.secrets.REDIS_HOST | quote }}
+          - name: DATABASE_HOST
+            value: {{ .Values.flask.secrets.DB_HOST | quote }}
+          - name: REDIS_PORT
+            value: "6379"
+          - name: DATABASE_PORT
+            value: "3306"
+
         envFrom:
           - secretRef:
               name: flask-app-secret
-          - secretRef:
-              name: flask-app-static-secret
 
         volumeMounts:
           - name: tmp
