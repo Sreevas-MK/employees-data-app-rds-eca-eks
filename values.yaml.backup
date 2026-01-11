@@ -42,9 +42,11 @@ flask:
     cpuTarget: 50
     memoryTarget: 70
 
-  secrets:
+  env:
     DB_HOST: eks-infra-mysql.cf68siug04ay.ap-south-1.rds.amazonaws.com
     REDIS_HOST: clustercfg.eks-infra-valkey.ni6vqg.aps1.cache.amazonaws.com
+
+  secrets:
     remoteRef:
       key: rds!db-6c9adb65-9582-4ff0-ae45-41d5a05bb23b
 

@@ -65,11 +65,11 @@ spec:
 
         env:
           - name: REDIS_HOST
-            value: {{ .Values.flask.secrets.REDIS_HOST | quote }}
+            value: {{ .Values.flask.env.REDIS_HOST | quote }}
           - name: REDIS_SSL
-            value: {{ .Values.flask.secrets.REDIS_SSL | quote }}
+            value: {{ .Values.flask.env.REDIS_SSL | quote }}
           - name: DATABASE_HOST
-            value: {{ .Values.flask.secrets.DB_HOST | quote }}
+            value: {{ .Values.flask.env.DB_HOST | quote }}
           - name: REDIS_PORT
             value: "6379"
           - name: DATABASE_PORT
